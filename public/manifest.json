@@ -1,0 +1,19 @@
+{
+  "name": "Gym Connect - Find Your Perfect Trainer",
+  "short_name": "GymConnect",
+  "description": "Connect with expert gym trainers, book sessions, and achieve your fitness goals.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#030712",
+  "orientation": "portrait",
+  "categories": ["fitness", "health", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

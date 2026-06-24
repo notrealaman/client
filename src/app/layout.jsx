@@ -1,17 +1,30 @@
 import { AuthProvider } from '@/lib/auth';
 import Navbar from '@/components/Navbar';
 import BottomNav from '@/components/BottomNav';
+import PwaInstallPrompt from '@/components/PwaInstallPrompt';
 import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
 export const metadata = {
-  title: 'Gym Buddy - Find Your Perfect Trainer',
+  title: 'Gym Connect - Find Your Perfect Trainer',
   description: 'Connect with expert gym trainers, book sessions, and achieve your fitness goals.',
+  manifest: '/manifest.json',
+  other: {
+    'theme-color': '#030712',
+    'apple-mobile-web-app-capable': 'yes',
+    'apple-mobile-web-app-status-bar-style': 'black-translucent',
+    'apple-mobile-web-app-title': 'GymConnect',
+    'mobile-web-app-capable': 'yes',
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <link rel="icon" href="/icons/icon.svg" />
+        <link rel="apple-touch-icon" href="/icons/icon.svg" />
+      </head>
       <body className="min-h-screen bg-dark-950 text-dark-50 antialiased">
         <AuthProvider>
           <Navbar />
@@ -19,6 +32,7 @@ export default function RootLayout({ children }) {
             {children}
           </main>
           <BottomNav />
+          <PwaInstallPrompt />
           <Toaster
             position="top-center"
             toastOptions={{
@@ -33,6 +47,17 @@ export default function RootLayout({ children }) {
             }}
           />
         </AuthProvider>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );
