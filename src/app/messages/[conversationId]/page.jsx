@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/lib/auth';
 import { messages as messagesApi } from '@/lib/api';
+import { useChatRealtime } from '@/lib/chat';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { Send, Loader2, ChevronLeft, MessageSquare } from 'lucide-react';
@@ -15,22 +16,37 @@ function ConversationContent() {
   const { user } = useAuth();
   const [messages, setMessages] = useState([]);
   const [conversation, setConversation] = useState(null);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMsg, setNewMsg] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef(null);
+  const otherUserIdRef = useRef(null);
+
+  const onRealtimeMsg = useCallback((msg) => {
+    setMessages(prev => {
+      if (prev.some(m => m.id === msg.id)) return prev;
+      return [...prev, msg];
+    });
+  }, []);
+
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const notifyViaWs = useChatRealtime(conversationId, token, onRealtimeMsg);
 
   useEffect(() => {
     loadConversation();
   }, [conversationId]);
 
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  useEffect(() => {
+    if (conversation) {
+      otherUserIdRef.current = conversation.participant1Id === user?.id
+        ? conversation.participant2Id
+        : conversation.participant1Id;
+    }
+  }, [conversation, user]);
 
   const loadConversation = async () => {
     try {
@@ -41,7 +57,7 @@ function ConversationContent() {
       setMessages(messagesData);
       const conv = convList.find(c => c.id === conversationId);
       setConversation(conv || null);
-    } catch (err) {
+    } catch {
       toast.error('Failed to load conversation');
       router.push('/messages');
     } finally {
@@ -51,13 +67,16 @@ function ConversationContent() {
 
   const sendMessage = async (e) => {
     e?.preventDefault();
-    if (!newMessage.trim() || sending) return;
+    if (!newMsg.trim() || sending) return;
     setSending(true);
     try {
-      const msg = await messagesApi.sendMessage(conversationId, newMessage);
+      const msg = await messagesApi.sendMessage(conversationId, newMsg);
       setMessages(prev => [...prev, msg]);
-      setNewMessage('');
-    } catch (err) {
+      setNewMsg('');
+      if (otherUserIdRef.current) {
+        notifyViaWs(otherUserIdRef.current, msg.content);
+      }
+    } catch {
       toast.error('Failed to send message');
     } finally {
       setSending(false);
@@ -134,14 +153,14 @@ function ConversationContent() {
           <div className="flex gap-2">
             <input
               type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
+              value={newMsg}
+              onChange={(e) => setNewMsg(e.target.value)}
               placeholder="Type your message..."
               className="flex-1 px-4 py-3 bg-dark-900/50 border border-dark-700 rounded-xl text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50 text-sm"
             />
             <button
               type="submit"
-              disabled={!newMessage.trim() || sending}
+              disabled={!newMsg.trim() || sending}
               className="px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
