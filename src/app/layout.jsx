@@ -1,0 +1,39 @@
+import { AuthProvider } from '@/lib/auth';
+import Navbar from '@/components/Navbar';
+import BottomNav from '@/components/BottomNav';
+import { Toaster } from 'react-hot-toast';
+import './globals.css';
+
+export const metadata = {
+  title: 'Gym Buddy - Find Your Perfect Trainer',
+  description: 'Connect with expert gym trainers, book sessions, and achieve your fitness goals.',
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en" className="dark">
+      <body className="min-h-screen bg-dark-950 text-dark-50 antialiased">
+        <AuthProvider>
+          <Navbar />
+          <main className="pb-20 md:pb-0">
+            {children}
+          </main>
+          <BottomNav />
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              style: {
+                background: '#1e293b',
+                color: '#f8fafc',
+                border: '1px solid #334155',
+                borderRadius: '12px',
+              },
+              success: { iconTheme: { primary: '#10b981', secondary: '#f8fafc' } },
+              error: { iconTheme: { primary: '#ef4444', secondary: '#f8fafc' } },
+            }}
+          />
+        </AuthProvider>
+      </body>
+    </html>
+  );
+}
