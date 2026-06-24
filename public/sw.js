@@ -1,4 +1,4 @@
-const CACHE = 'gym-connect-v1';
+const CACHE = 'gym-buddy-v1';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',

@@ -6,14 +6,14 @@ import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
 export const metadata = {
-  title: 'Gym Connect - Find Your Perfect Trainer',
-  description: 'Connect with expert gym trainers, book sessions, and achieve your fitness goals.',
+  title: 'GymBuddy',
+  description: 'Your personal fitness companion.',
   manifest: '/manifest.json',
   other: {
     'theme-color': '#030712',
     'apple-mobile-web-app-capable': 'yes',
     'apple-mobile-web-app-status-bar-style': 'black-translucent',
-    'apple-mobile-web-app-title': 'GymConnect',
+    'apple-mobile-web-app-title': 'GymBuddy',
     'mobile-web-app-capable': 'yes',
   },
 };

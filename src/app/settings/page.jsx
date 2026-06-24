@@ -6,11 +6,13 @@ import { useAuth } from '@/lib/auth';
 import { users } from '@/lib/api';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Settings, Ruler, Weight, Dumbbell, Target, Calendar, Heart, Loader2, ChevronLeft, Camera, MapPin, Crosshair } from 'lucide-react';
+import { Settings, Ruler, Weight, Dumbbell, Target, Calendar, Heart, Loader2, ChevronLeft, Camera, MapPin, Crosshair, Download } from 'lucide-react';
+import { usePwaInstall } from '@/lib/usePwaInstall';
 import Link from 'next/link';
 
 function SettingsContent() {
   const { user, loadUser } = useAuth();
+  const { canInstall, install } = usePwaInstall();
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     name: '', username: '', email: '', phone: '', bio: '', avatar: '', location: '', latitude: '', longitude: '',
@@ -235,6 +237,16 @@ function SettingsContent() {
             </div>
           </div>
         </div>
+
+        {canInstall && (
+          <div className="bg-dark-800/30 border border-dark-700/30 rounded-2xl p-6 space-y-4">
+            <h2 className="text-lg font-semibold text-white flex items-center gap-2"><Download className="w-5 h-5 text-cyan-400" /> App</h2>
+            <p className="text-sm text-dark-400">Install GymBuddy on your device for a faster, app-like experience.</p>
+            <button type="button" onClick={install} className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-xl hover:from-cyan-400 hover:to-blue-500 transition-all flex items-center justify-center gap-2">
+              <Download className="w-4 h-4" /> Install App
+            </button>
+          </div>
+        )}
 
         <button type="submit" disabled={saving} className="w-full py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white font-semibold rounded-xl hover:from-primary-500 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
           {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Settings className="w-4 h-4" />}

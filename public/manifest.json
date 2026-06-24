@@ -1,6 +1,6 @@
 {
-  "name": "Gym Connect - Find Your Perfect Trainer",
-  "short_name": "GymConnect",
+  "name": "GymBuddy",
+  "short_name": "GymBuddy",
   "description": "Connect with expert gym trainers, book sessions, and achieve your fitness goals.",
   "start_url": "/",
   "display": "standalone",

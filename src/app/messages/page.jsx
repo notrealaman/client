@@ -33,17 +33,17 @@ function MessagesContent() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white">Messages</h1>
-        <p className="text-dark-400 mt-1">Chat with your trainers and trainees</p>
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 min-h-[calc(100dvh-10rem)] flex flex-col">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">Messages</h1>
+        <p className="text-dark-400 mt-1 text-sm sm:text-base">Chat with your trainers and trainees</p>
       </div>
 
       {conversations.length === 0 ? (
-        <div className="text-center py-20">
-          <MessageSquare className="w-16 h-16 text-dark-600 mx-auto mb-4" />
+        <div className="flex-1 flex flex-col items-center justify-center -mt-12 sm:-mt-16">
+          <MessageSquare className="w-16 h-16 text-dark-600 mb-4" />
           <h3 className="text-lg font-medium text-white mb-2">No conversations yet</h3>
-          <p className="text-dark-400">Start by browsing trainers and sending a message.</p>
+          <p className="text-dark-400 text-sm">Start by browsing trainers and sending a message.</p>
           <Link
             href="/trainers"
             className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 bg-primary-500/10 border border-primary-500/20 text-primary-400 rounded-xl text-sm font-medium hover:bg-primary-500/20 transition-all"

@@ -120,18 +120,20 @@ function DietPlanContent() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-white">Diet & <span className="text-gradient">Calories</span></h1>
-          <p className="text-dark-400 mt-1">Plan your meals and track your daily intake</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <button onClick={() => setShowAIGenerate(true)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-purple-500 rounded-xl hover:from-purple-500 transition-all shadow-lg shadow-purple-500/20">
-            <Sparkles className="w-4 h-4" /> AI Generate
-          </button>
-          <button onClick={() => setShowCreatePlan(true)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-500 rounded-xl hover:from-primary-500 transition-all shadow-lg shadow-primary-500/20">
-            <Plus className="w-4 h-4" /> New Plan
-          </button>
+      <div className="mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">Diet & <span className="text-gradient">Calories</span></h1>
+            <p className="text-dark-400 mt-1 text-sm sm:text-base">Plan your meals and track your daily intake</p>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button onClick={() => setShowAIGenerate(true)} className="flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-purple-500 rounded-xl hover:from-purple-500 transition-all shadow-lg shadow-purple-500/20 flex-1 sm:flex-none">
+              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> AI Generate
+            </button>
+            <button onClick={() => setShowCreatePlan(true)} className="flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-primary-600 to-primary-500 rounded-xl hover:from-primary-500 transition-all shadow-lg shadow-primary-500/20 flex-1 sm:flex-none">
+              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> New Plan
+            </button>
+          </div>
         </div>
       </div>
 
