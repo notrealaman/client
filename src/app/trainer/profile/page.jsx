@@ -3,13 +3,27 @@
 import { useState, useEffect, useRef } from 'react';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/lib/auth';
-import { users as usersApi, uploads } from '@/lib/api';
+import { users as usersApi } from '@/lib/api';
 import { motion } from 'framer-motion';
 import {
   Loader2, Camera, Plus, X, Save, Image,
   Trophy, User, Dumbbell, FileImage, Sparkles
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+async function uploadImage(base64) {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_BASE}/upload/photo`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...(token && { Authorization: `Bearer ${token}` }) },
+    body: JSON.stringify({ image: base64 }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || 'Upload failed');
+  return data.url;
+}
 
 function TrainerProfileContent() {
   const { user, refreshUser } = useAuth();
@@ -128,9 +142,33 @@ function TrainerProfileContent() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      let finalAvatar = avatar;
+      let finalCover = coverImage;
+      let finalPhotos = photos;
+
+      if (avatar && avatar.startsWith('data:')) {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_BASE}/upload/avatar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(token && { Authorization: `Bearer ${token}` }) },
+          body: JSON.stringify({ image: avatar }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Avatar upload failed');
+        finalAvatar = data.avatar;
+      }
+
+      if (coverImage && coverImage.startsWith('data:')) {
+        finalCover = await uploadImage(coverImage);
+      }
+
+      if (photos.some(p => p.startsWith('data:'))) {
+        finalPhotos = await Promise.all(photos.map(p => p.startsWith('data:') ? uploadImage(p) : p));
+      }
+
       const payload = {
-        bio, avatar, coverImage, physique,
-        achievements, photos,
+        bio, avatar: finalAvatar, coverImage: finalCover, physique,
+        achievements, photos: finalPhotos,
         specialties, experience, hourlyRate,
         trainingStyle, trainerLocation: location,
         trainerLatitude: latitude, trainerLongitude: longitude,

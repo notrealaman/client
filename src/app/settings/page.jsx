@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { Settings, Ruler, Weight, Dumbbell, Target, Calendar, Heart, Loader2, ChevronLeft, Camera, MapPin, Crosshair, Download } from 'lucide-react';
 import { usePwaInstall } from '@/lib/usePwaInstall';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 import Link from 'next/link';
 
 function SettingsContent() {
@@ -120,7 +121,14 @@ function SettingsContent() {
                   reader.onload = async (ev) => {
                     const base64 = ev.target.result;
                     try {
-                      await users.update({ avatar: base64 });
+                      const token = localStorage.getItem('token');
+                      const res = await fetch(`${API_BASE}/upload/avatar`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', ...(token && { Authorization: `Bearer ${token}` }) },
+                        body: JSON.stringify({ image: base64 }),
+                      });
+                      const data = await res.json();
+                      if (!res.ok) throw new Error(data.message || 'Upload failed');
                       toast.success('Photo updated');
                       await loadUser();
                     } catch (err) { toast.error(err.message); }
