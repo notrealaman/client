@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/lib/auth';
 import { messages as messagesApi } from '@/lib/api';
@@ -102,7 +103,13 @@ function ConversationContent() {
             {conversation?.otherUser?.name?.charAt(0) || '?'}
           </div>
           <div>
-            <h2 className="text-sm font-semibold text-white">{conversation?.otherUser?.name || 'Unknown'}</h2>
+            {(conversation?.otherUser?.role === 'TRAINER' || conversation?.otherUser?.role === 'BOTH') && conversation?.otherUser?.trainerProfile?.id ? (
+              <Link href={`/trainers/${conversation.otherUser.trainerProfile.id}`} className="text-sm font-semibold text-white hover:text-primary-400 transition-colors">
+                {conversation.otherUser.name}
+              </Link>
+            ) : (
+              <h2 className="text-sm font-semibold text-white">{conversation?.otherUser?.name || 'Unknown'}</h2>
+            )}
           </div>
         </div>
 
