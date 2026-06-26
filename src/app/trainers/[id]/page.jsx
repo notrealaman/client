@@ -329,7 +329,7 @@ function TrainerDetailContent() {
       </div>
 
       {bookingOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => setBookingOpen(false)} />
           <motion.div
             initial={{ opacity: 0, y: 100 }}
@@ -402,7 +402,7 @@ function TrainerDetailContent() {
       )}
 
       {messageOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => { setMessageOpen(false); setMessageText(''); }} />
           <motion.div
             initial={{ opacity: 0, y: 100 }}

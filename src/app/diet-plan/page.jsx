@@ -249,7 +249,7 @@ function DietPlanContent() {
       </div>
 
       {showAIGenerate && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => setShowAIGenerate(false)} />
           <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-md bg-dark-800 border border-dark-700 rounded-2xl p-6 mx-4 sm:mx-0 max-h-[90vh] overflow-y-auto">
             <button onClick={() => setShowAIGenerate(false)} className="absolute top-4 right-4 text-dark-400 hover:text-white"><X className="w-5 h-5" /></button>
@@ -299,7 +299,7 @@ function DietPlanContent() {
       )}
 
       {showCreatePlan && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => setShowCreatePlan(false)} />
           <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-md bg-dark-800 border border-dark-700 rounded-2xl p-6 mx-4 sm:mx-0 max-h-[90vh] overflow-y-auto">
             <button onClick={() => setShowCreatePlan(false)} className="absolute top-4 right-4 text-dark-400 hover:text-white"><X className="w-5 h-5" /></button>
@@ -321,7 +321,7 @@ function DietPlanContent() {
       )}
 
       {showAddMeal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => setShowAddMeal(null)} />
           <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-sm bg-dark-800 border border-dark-700 rounded-2xl p-6 mx-4 sm:mx-0 max-h-[90vh] overflow-y-auto">
             <button onClick={() => setShowAddMeal(null)} className="absolute top-4 right-4 text-dark-400 hover:text-white"><X className="w-5 h-5" /></button>
@@ -338,7 +338,7 @@ function DietPlanContent() {
       )}
 
       {showAddItem && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => setShowAddItem(null)} />
           <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-sm bg-dark-800 border border-dark-700 rounded-2xl p-6 mx-4 sm:mx-0 max-h-[90vh] overflow-y-auto">
             <button onClick={() => setShowAddItem(null)} className="absolute top-4 right-4 text-dark-400 hover:text-white"><X className="w-5 h-5" /></button>
