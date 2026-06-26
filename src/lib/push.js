@@ -21,6 +21,15 @@ function keyToBase64(key) {
   return btoa(binary);
 }
 
+function urlBase64ToUint8Array(base64) {
+  const padding = '='.repeat((4 - (base64.length % 4)) % 4);
+  const b64 = (base64 + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const str = atob(b64);
+  const arr = new Uint8Array(str.length);
+  for (let i = 0; i < str.length; i++) arr[i] = str.charCodeAt(i);
+  return arr;
+}
+
 export async function subscribeUser() {
   try {
     const reg = await navigator.serviceWorker.ready;
@@ -29,7 +38,7 @@ export async function subscribeUser() {
 
     sub = await reg.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: VAPID_PUBLIC_KEY,
+      applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
     });
 
     const token = localStorage.getItem('token');
