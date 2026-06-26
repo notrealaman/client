@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/auth';
-import { Dumbbell, Menu, X, User, LogOut, LayoutDashboard, CalendarDays, MessageSquare, Users, Apple, Calendar, Settings, UserCheck } from 'lucide-react';
+import { Dumbbell, Menu, X, User, LogOut, LayoutDashboard, CalendarDays, MessageSquare, Users, Apple, Calendar, Settings, UserCheck, Bell } from 'lucide-react';
+import NotificationBell from '@/components/NotificationBell';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -56,6 +57,7 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-3">
               {user ? (
                 <>
+                  <NotificationBell />
                   <Link
                     href="/messages"
                     className="flex items-center gap-2 px-3 py-2 text-sm text-dark-300 hover:text-white hover:bg-dark-800/50 rounded-lg transition-all"
@@ -129,6 +131,14 @@ export default function Navbar() {
               <hr className="border-dark-800 my-2" />
               {user ? (
                 <>
+                  <Link
+                    href="/notifications"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 px-3 py-3 text-sm text-dark-300 hover:text-white hover:bg-dark-800/50 rounded-lg transition-all"
+                  >
+                    <Bell className="w-5 h-5" />
+                    Notifications
+                  </Link>
                   <Link
                     href="/messages"
                     onClick={() => setMobileOpen(false)}

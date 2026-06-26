@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth';
 import { users } from '@/lib/api';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Settings, Ruler, Weight, Dumbbell, Target, Calendar, Heart, Loader2, ChevronLeft, Camera, MapPin, Crosshair, Download } from 'lucide-react';
+import { Settings, Ruler, Weight, Dumbbell, Target, Calendar, Heart, Clock, Loader2, ChevronLeft, Camera, MapPin, Crosshair, Download } from 'lucide-react';
 import { usePwaInstall } from '@/lib/usePwaInstall';
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ function SettingsContent() {
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
     name: '', username: '', email: '', phone: '', bio: '', avatar: '', location: '', latitude: '', longitude: '',
-    weight: '', age: '', dateOfBirth: '', height: '', bmi: '', goal: 'BULK',
+    weight: '', age: '', dateOfBirth: '', height: '', bmi: '', goal: 'BULK', gymTime: '',
   });
 
   useEffect(() => {
@@ -38,6 +38,7 @@ function SettingsContent() {
         height: user.height?.toString() || '',
         bmi: user.bmi?.toString() || '',
         goal: user.goal || 'BULK',
+        gymTime: user.gymTime || '',
       });
     }
   }, [user]);
@@ -79,6 +80,7 @@ function SettingsContent() {
         height: form.height ? parseFloat(form.height) : undefined,
         bmi: form.bmi ? parseFloat(form.bmi) : undefined,
         goal: form.goal,
+        gymTime: form.gymTime || undefined,
       });
       toast.success('Settings saved');
       await loadUser();
@@ -242,6 +244,14 @@ function SettingsContent() {
               <button type="button" onClick={() => setForm({ ...form, goal: 'LEAN' })} className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl border transition-all ${form.goal === 'LEAN' ? 'border-primary-500 bg-primary-500/10 text-primary-400' : 'border-dark-700 bg-dark-900/50 text-dark-400 hover:text-dark-200'}`}>
                 <Weight className="w-4 h-4" /> Lean (Lose Fat)
               </button>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-dark-300 mb-1">Gym Time (optional)</label>
+            <div className="relative">
+              <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-500" />
+              <input type="time" value={form.gymTime} onChange={(e) => setForm({ ...form, gymTime: e.target.value })} className="w-full pl-9 pr-4 py-3 bg-dark-900/50 border border-dark-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50" />
             </div>
           </div>
         </div>

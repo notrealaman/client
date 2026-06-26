@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { LayoutDashboard, Users, CalendarDays, MessageSquare, User } from 'lucide-react';
+import { useNotifications } from '@/hooks/useNotifications';
 
 export default function BottomNav() {
   const { user } = useAuth();
   const pathname = usePathname();
+  const { unreadCount } = useNotifications();
 
   if (!user) return null;
 
@@ -15,7 +17,7 @@ export default function BottomNav() {
     { href: '/dashboard', label: 'Home', icon: LayoutDashboard },
     { href: '/trainers', label: 'Trainers', icon: Users },
     { href: '/sessions', label: 'Sessions', icon: CalendarDays },
-    { href: '/messages', label: 'Chat', icon: MessageSquare },
+    { href: '/messages', label: 'Chat', icon: MessageSquare, badge: unreadCount },
     { href: '/profile', label: 'Profile', icon: User },
   ];
 
@@ -28,13 +30,20 @@ export default function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
-              className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded-lg transition-all min-w-[56px] ${
+              className={`flex flex-col items-center justify-center gap-0.5 px-3 py-1 rounded-lg transition-all min-w-[56px] relative ${
                 isActive
                   ? 'text-primary-400'
                   : 'text-dark-400 hover:text-dark-200'
               }`}
             >
-              <tab.icon className={`w-5 h-5 ${isActive ? 'drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]' : ''}`} />
+              <div className="relative">
+                <tab.icon className={`w-5 h-5 ${isActive ? 'drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]' : ''}`} />
+                {tab.badge > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] flex items-center justify-center text-[9px] font-bold text-white bg-red-500 rounded-full px-0.5">
+                    {tab.badge > 99 ? '99+' : tab.badge}
+                  </span>
+                )}
+              </div>
               <span className="text-[10px] font-medium">{tab.label}</span>
             </Link>
           );

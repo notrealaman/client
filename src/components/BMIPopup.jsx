@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { users } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
-import { Loader2, Ruler, Weight, Dumbbell } from 'lucide-react';
+import { Loader2, Ruler, Weight, Dumbbell, Clock } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function BMIPopup() {
@@ -13,6 +13,7 @@ export default function BMIPopup() {
   const [height, setHeight] = useState('');
   const [age, setAge] = useState('');
   const [goal, setGoal] = useState('BULK');
+  const [gymTime, setGymTime] = useState('');
   const [saving, setSaving] = useState(false);
   const [bmi, setBmi] = useState(null);
 
@@ -35,6 +36,7 @@ export default function BMIPopup() {
         age: parseInt(age),
         bmi: bmiValue,
         goal,
+        gymTime: gymTime || undefined,
       });
       toast.success('Profile updated!');
       await loadUser();
@@ -90,6 +92,14 @@ export default function BMIPopup() {
           <div>
             <label className="block text-xs font-medium text-dark-300 mb-1">Age</label>
             <input type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="25" className="w-full px-4 py-3 bg-dark-900/50 border border-dark-700 rounded-xl text-white placeholder-dark-500 focus:outline-none focus:ring-2 focus:ring-primary-500/50" required />
+          </div>
+
+          <div>
+            <label className="block text-xs font-medium text-dark-300 mb-1">Gym Time (optional)</label>
+            <div className="relative">
+              <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-500" />
+              <input type="time" value={gymTime} onChange={(e) => setGymTime(e.target.value)} className="w-full pl-9 pr-4 py-3 bg-dark-900/50 border border-dark-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50" />
+            </div>
           </div>
 
           {bmi && (

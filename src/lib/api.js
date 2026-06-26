@@ -80,6 +80,15 @@ export const messages = {
 
 export const reviews = { create: (body) => request('/reviews', { method: 'POST', body: JSON.stringify(body) }) };
 
+export const notifications = {
+  list: () => request('/notifications'),
+  unreadCount: () => request('/notifications/unread-count'),
+  markRead: (id) => request(`/notifications/${id}/read`, { method: 'PUT' }),
+  markAllRead: () => request('/notifications/read-all', { method: 'PUT' }),
+  streakCheck: () => request('/notifications/streak-check'),
+  gymTimeCheck: () => request('/notifications/gym-time-check'),
+};
+
 export const users = {
   profile: () => request('/users/profile'),
   profileById: (id) => request(`/users/${id}/profile`),

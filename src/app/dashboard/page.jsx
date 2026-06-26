@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/lib/auth';
-import { sessions as sessionsApi, calories as caloriesApi, diet as dietApi, trainers as trainersApi, users as usersApi } from '@/lib/api';
+import { sessions as sessionsApi, calories as caloriesApi, diet as dietApi, trainers as trainersApi, users as usersApi, notifications as notificationsApi } from '@/lib/api';
 import { motion } from 'framer-motion';
 import {
   CalendarDays, Users, TrendingUp, ArrowRight,
@@ -229,6 +229,8 @@ function TraineeDashboard({ user }) {
   const [weekPct, setWeekPct] = useState(0);
 
   useEffect(() => { load(); }, []);
+  useEffect(() => { notificationsApi.streakCheck().catch(() => {}); }, []);
+  useEffect(() => { notificationsApi.gymTimeCheck().catch(() => {}); const t = setInterval(() => notificationsApi.gymTimeCheck().catch(() => {}), 60000); return () => clearInterval(t); }, []);
 
   const load = async () => {
     try {
