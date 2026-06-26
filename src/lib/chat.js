@@ -10,7 +10,7 @@ function wssUrl() {
 export function useChatRealtime(conversationId, token, onMessage) {
   const ws = useRef(null);
   const timer = useRef(null);
-  const lastId = useRef(null);
+  const knownIds = useRef(new Set());
   const handler = useRef(onMessage);
   handler.current = onMessage;
 
@@ -26,7 +26,12 @@ export function useChatRealtime(conversationId, token, onMessage) {
         s.onmessage = (e) => {
           try {
             const d = JSON.parse(e.data);
-            if (d.type === 'new_message') handler.current({ id: d.id || Date.now().toString(), senderId: d.senderId, content: d.content, conversationId: d.conversationId, createdAt: d.createdAt });
+            if (d.type === 'new_message') {
+              const id = d.id || Date.now().toString();
+              if (knownIds.current.has(id)) return;
+              knownIds.current.add(id);
+              handler.current({ id, senderId: d.senderId, sender: d.sender, content: d.content, conversationId: d.conversationId, createdAt: d.createdAt });
+            }
           } catch {}
         };
         s.onclose = () => { setTimeout(connect, 3000); poll(); };
@@ -39,8 +44,11 @@ export function useChatRealtime(conversationId, token, onMessage) {
       const tick = async () => {
         try {
           const msgs = await api.getMessages(conversationId);
-          const last = msgs[msgs.length - 1];
-          if (last && last.id !== lastId.current) { lastId.current = last.id; handler.current(last); }
+          const newMsgs = msgs.filter(m => !knownIds.current.has(m.id));
+          for (const m of newMsgs) {
+            knownIds.current.add(m.id);
+            handler.current(m);
+          }
         } catch {}
       };
       tick();

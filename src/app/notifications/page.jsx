@@ -67,7 +67,7 @@ function NotificationsContent() {
                   <span className="text-lg mt-0.5">{typeIcon(n.type)}</span>
                   <div className="flex-1 min-w-0">
                     <p className={`text-sm ${n.read ? 'text-dark-400' : 'text-white font-medium'}`}>{n.title}</p>
-                    <p className="text-xs text-dark-500 mt-0.5 line-clamp-2">{n.message}</p>
+                    <p className="text-xs text-dark-500 mt-0.5 line-clamp-2">{n.body || n.message}</p>
                     <p className="text-[10px] text-dark-600 mt-1">{new Date(n.createdAt).toLocaleString()}</p>
                   </div>
                   {!n.read && <span className="w-2 h-2 rounded-full bg-primary-500 mt-2 shrink-0" />}
