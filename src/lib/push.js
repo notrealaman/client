@@ -1,9 +1,6 @@
 const VAPID_PUBLIC_KEY = 'BGpWkuXyGtrSpVQC0MdS84VEBKewHWcYOLfXCoTbwheCsrSHJsobXICU697_Kld6O4VT8z7O81mLxa1KM1vOMI4';
 
-function apiUrl(path) {
-  const base = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-  return `${base}${path}`;
-}
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api').replace(/\/api$/, '');
 
 async function request(token, url, options) {
   const res = await fetch(url, {
@@ -12,13 +9,6 @@ async function request(token, url, options) {
   });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
-}
-
-function keyToBase64(key) {
-  const bytes = new Uint8Array(key);
-  let binary = '';
-  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-  return btoa(binary);
 }
 
 function urlBase64ToUint8Array(base64) {
@@ -42,16 +32,25 @@ export async function subscribeUser() {
     });
 
     const token = localStorage.getItem('token');
-    if (!token) throw new Error('Not authenticated');
+    if (!token) return null;
 
-    await request(token, apiUrl('/push/subscribe'), {
+    const subData = sub.toJSON();
+
+    const res = await fetch(`${API_BASE}/api/push/subscribe`, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       body: JSON.stringify({
-        endpoint: sub.endpoint,
-        keys: { p256dh: keyToBase64(sub.getKey('p256dh')), auth: keyToBase64(sub.getKey('auth')) },
+        endpoint: subData.endpoint,
+        keys: subData.keys,
         deviceInfo: navigator.userAgent,
       }),
     });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('Subscribe API error:', err);
+      return null;
+    }
 
     return sub;
   } catch (err) {
@@ -69,9 +68,11 @@ export async function unsubscribeUser() {
 
     const token = localStorage.getItem('token');
     if (token) {
-      await request(token, apiUrl('/push/unsubscribe'), {
+      const subData = sub.toJSON();
+      await fetch(`${API_BASE}/api/push/unsubscribe`, {
         method: 'DELETE',
-        body: JSON.stringify({ endpoint: sub.endpoint }),
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ endpoint: subData.endpoint }),
       }).catch(() => {});
     }
 
