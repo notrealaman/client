@@ -5,12 +5,12 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { useAuth } from '@/lib/auth';
-import { sessions as sessionsApi, diet as dietApi, messages as messagesApi } from '@/lib/api';
+import { sessions as sessionsApi, diet as dietApi, messages as messagesApi, trainers as trainersApi, users as usersApi } from '@/lib/api';
 import { motion } from 'framer-motion';
 import {
   Loader2, ArrowLeft, Calendar, MessageSquare, Apple,
   Dumbbell, Clock, Plus, ChevronDown, Send, User,
-  CheckCircle2, XCircle, AlertCircle
+  CheckCircle2, XCircle, AlertCircle, UserPlus, UserCheck
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -20,27 +20,30 @@ function ManageTraineeContent() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [trainee, setTrainee] = useState(null);
+  const [traineeProfile, setTraineeProfile] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [activeTab, setActiveTab] = useState('sessions');
   const [saving, setSaving] = useState(false);
+  const [assigning, setAssigning] = useState(false);
   const [assigningDiet, setAssigningDiet] = useState(false);
 
   useEffect(() => { load(); }, []);
 
   const load = async () => {
     try {
-      const [sessionsData, convoData] = await Promise.all([
+      const [sessionsData, profileData] = await Promise.all([
         sessionsApi.list({ role: 'trainer', traineeId: id }),
-        messagesApi.conversations().catch(() => []),
+        usersApi.profileById(id).catch(() => null),
       ]);
       setSessions(sessionsData);
+      setTraineeProfile(profileData);
 
       if (sessionsData.length > 0) {
         const first = sessionsData[0];
-        setTrainee(first.trainee || { id, name: 'Loading...' });
+        setTrainee(first.trainee || { id, name: profileData?.name || 'Trainee', avatar: profileData?.avatar || null });
+      } else if (profileData) {
+        setTrainee({ id: profileData.id, name: profileData.name, avatar: profileData.avatar });
       } else {
-        const { default: request } = await import('@/lib/api');
-        const userData = await request(`/users/profile`);
         setTrainee({ id, name: 'Trainee', avatar: null });
       }
 
@@ -50,6 +53,17 @@ function ManageTraineeContent() {
       setLoading(false);
       toast.error('Could not load trainee data');
     }
+  };
+
+  const handleAssign = async () => {
+    setAssigning(true);
+    try {
+      await trainersApi.assignTrainee(id);
+      toast.success('Trainee added to your list!');
+      load();
+    } catch (err) {
+      toast.error(err.message);
+    } finally { setAssigning(false); }
   };
 
   const handleSchedule = async () => {
@@ -62,8 +76,7 @@ function ManageTraineeContent() {
 
     setSaving(true);
     try {
-      await sessionsApi.create({
-        trainerId: user.id,
+      await trainersApi.createSessionForTrainee(id, {
         startDate,
         endDate,
         totalDays: parseInt(totalDays),
@@ -139,7 +152,21 @@ function ManageTraineeContent() {
             <p className="text-dark-400 text-sm">{sessions.length} session{sessions.length !== 1 ? 's' : ''}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {traineeProfile?.assignedTrainerId === user.id ? (
+            <span className="flex items-center gap-1.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg px-3 py-2">
+              <UserCheck className="w-3.5 h-3.5" /> Your Trainee
+            </span>
+          ) : traineeProfile?.assignedTrainerId ? (
+            <span className="flex items-center gap-1.5 text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-lg px-3 py-2">
+              <User className="w-3.5 h-3.5" /> Assigned to {traineeProfile.assignedTrainer?.name || 'another trainer'}
+            </span>
+          ) : (
+            <button onClick={handleAssign} disabled={assigning}
+              className="flex items-center gap-1.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg px-3 py-2 hover:bg-emerald-500/20 transition-colors disabled:opacity-50">
+              <UserPlus className="w-3.5 h-3.5" /> {assigning ? 'Adding...' : 'Add as My Trainee'}
+            </button>
+          )}
           <button onClick={handleChat}
             className="flex items-center gap-1.5 text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg px-3 py-2 hover:bg-blue-500/20 transition-colors">
             <MessageSquare className="w-3.5 h-3.5" /> Chat

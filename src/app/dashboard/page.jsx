@@ -284,7 +284,10 @@ function TraineeDashboard({ user }) {
       );
       setActiveSessions(mySessions.length);
 
-      if (mySessions.length > 0 && mySessions[0].trainer) {
+      if (user?.assignedTrainer) {
+        setTrainerName(user.assignedTrainer.name);
+        setTrainerAvatar(user.assignedTrainer.avatar);
+      } else if (mySessions.length > 0 && mySessions[0].trainer) {
         setTrainerName(mySessions[0].trainer.name);
         setTrainerAvatar(mySessions[0].trainer.avatar);
       }

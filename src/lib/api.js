@@ -25,6 +25,8 @@ export const trainers = {
   specialties: () => request('/trainers/specialties'),
   stats: () => request('/trainers/stats'),
   trainees: () => request('/trainers/trainees'),
+  assignTrainee: (traineeId) => request(`/trainers/trainees/${traineeId}/assign`, { method: 'POST' }),
+  createSessionForTrainee: (traineeId, body) => request(`/trainers/trainees/${traineeId}/sessions`, { method: 'POST', body: JSON.stringify(body) }),
 };
 
 export const sessions = {
@@ -80,6 +82,7 @@ export const reviews = { create: (body) => request('/reviews', { method: 'POST',
 
 export const users = {
   profile: () => request('/users/profile'),
+  profileById: (id) => request(`/users/${id}/profile`),
   update: (body) => request('/users/profile', { method: 'PUT', body: JSON.stringify(body) }),
 };
 
