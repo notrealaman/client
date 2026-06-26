@@ -26,7 +26,7 @@ async function uploadImage(base64) {
 }
 
 function TrainerProfileContent() {
-  const { user, refreshUser } = useAuth();
+  const { user, loadUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState(null);
@@ -174,9 +174,15 @@ function TrainerProfileContent() {
         trainerLatitude: latitude, trainerLongitude: longitude,
       };
       await usersApi.update(payload);
-      await refreshUser();
+      await loadUser();
       toast.success('Profile updated!');
-    } catch (err) { toast.error(err.message); }
+    } catch (err) {
+      if (err.message === 'Failed to fetch' || err.message === 'NetworkError') {
+        toast.error('Network error — check your connection and try again');
+      } else {
+        toast.error(err.message);
+      }
+    }
     finally { setSaving(false); }
   };
 
