@@ -204,12 +204,12 @@ function SessionsContent() {
       )}
 
       {reviewModal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => setReviewModal(null)} />
           <motion.div
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
-            className="relative w-full sm:max-w-md bg-dark-800 border border-dark-700 rounded-t-3xl sm:rounded-3xl p-6 sm:p-8"
+            className="relative w-full sm:max-w-md bg-dark-800 border border-dark-700 rounded-2xl p-6 sm:p-8 mx-4 sm:mx-0 max-h-[90vh] overflow-y-auto"
           >
             <button onClick={() => setReviewModal(null)} className="absolute top-4 right-4 text-dark-400 hover:text-white">
               <XIcon className="w-5 h-5" />

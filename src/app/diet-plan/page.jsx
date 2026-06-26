@@ -249,9 +249,9 @@ function DietPlanContent() {
       </div>
 
       {showAIGenerate && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => setShowAIGenerate(false)} />
-          <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-md bg-dark-800 border border-dark-700 rounded-t-3xl sm:rounded-3xl p-6">
+          <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-md bg-dark-800 border border-dark-700 rounded-2xl p-6 mx-4 sm:mx-0 max-h-[90vh] overflow-y-auto">
             <button onClick={() => setShowAIGenerate(false)} className="absolute top-4 right-4 text-dark-400 hover:text-white"><X className="w-5 h-5" /></button>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
@@ -299,9 +299,9 @@ function DietPlanContent() {
       )}
 
       {showCreatePlan && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => setShowCreatePlan(false)} />
-          <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-md bg-dark-800 border border-dark-700 rounded-t-3xl sm:rounded-3xl p-6">
+          <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-md bg-dark-800 border border-dark-700 rounded-2xl p-6 mx-4 sm:mx-0 max-h-[90vh] overflow-y-auto">
             <button onClick={() => setShowCreatePlan(false)} className="absolute top-4 right-4 text-dark-400 hover:text-white"><X className="w-5 h-5" /></button>
             <h2 className="text-xl font-bold text-white mb-6">New Diet Plan</h2>
             <form onSubmit={createPlan} className="space-y-4">
@@ -321,9 +321,9 @@ function DietPlanContent() {
       )}
 
       {showAddMeal && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => setShowAddMeal(null)} />
-          <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-sm bg-dark-800 border border-dark-700 rounded-t-3xl sm:rounded-3xl p-6">
+          <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-sm bg-dark-800 border border-dark-700 rounded-2xl p-6 mx-4 sm:mx-0 max-h-[90vh] overflow-y-auto">
             <button onClick={() => setShowAddMeal(null)} className="absolute top-4 right-4 text-dark-400 hover:text-white"><X className="w-5 h-5" /></button>
             <h2 className="text-lg font-bold text-white mb-4">Add Meal</h2>
             <div className="space-y-3">
@@ -338,9 +338,9 @@ function DietPlanContent() {
       )}
 
       {showAddItem && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-dark-950/80 backdrop-blur-sm" onClick={() => setShowAddItem(null)} />
-          <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-sm bg-dark-800 border border-dark-700 rounded-t-3xl sm:rounded-3xl p-6">
+          <motion.div initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} className="relative w-full sm:max-w-sm bg-dark-800 border border-dark-700 rounded-2xl p-6 mx-4 sm:mx-0 max-h-[90vh] overflow-y-auto">
             <button onClick={() => setShowAddItem(null)} className="absolute top-4 right-4 text-dark-400 hover:text-white"><X className="w-5 h-5" /></button>
             <h2 className="text-lg font-bold text-white mb-4">Add Food Item</h2>
             <div className="space-y-3">
