@@ -2,6 +2,7 @@ import { AuthProvider } from '@/lib/auth';
 import Navbar from '@/components/Navbar';
 import BottomNav from '@/components/BottomNav';
 import PwaInstallPrompt from '@/components/PwaInstallPrompt';
+import PushSubscriber from '@/components/PushSubscriber';
 import { Toaster } from 'react-hot-toast';
 import './globals.css';
 
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
           </main>
           <BottomNav />
           <PwaInstallPrompt />
+          <PushSubscriber />
           <Toaster
             position="top-center"
             toastOptions={{

@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth';
 import { users } from '@/lib/api';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { Settings, Ruler, Weight, Dumbbell, Target, Calendar, Heart, Clock, Loader2, ChevronLeft, Camera, MapPin, Crosshair, Download } from 'lucide-react';
+import { Settings, Ruler, Weight, Dumbbell, Target, Calendar, Heart, Clock, Bell, Loader2, ChevronLeft, Camera, MapPin, Crosshair, Download } from 'lucide-react';
 import { usePwaInstall } from '@/lib/usePwaInstall';
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 import Link from 'next/link';
@@ -15,6 +15,28 @@ function SettingsContent() {
   const { user, loadUser } = useAuth();
   const { canInstall, install } = usePwaInstall();
   const [saving, setSaving] = useState(false);
+  const [pushEnabled, setPushEnabled] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window && 'serviceWorker' in navigator) {
+      setPushEnabled(Notification.permission === 'granted');
+    }
+  }, []);
+
+  const togglePush = async () => {
+    if (pushEnabled) {
+      const { unsubscribeUser } = await import('@/lib/push');
+      await unsubscribeUser();
+      setPushEnabled(false);
+    } else {
+      const perm = await Notification.requestPermission();
+      if (perm === 'granted') {
+        const { subscribeUser } = await import('@/lib/push');
+        await subscribeUser();
+        setPushEnabled(true);
+      }
+    }
+  };
   const [form, setForm] = useState({
     name: '', username: '', email: '', phone: '', bio: '', avatar: '', location: '', latitude: '', longitude: '',
     weight: '', age: '', dateOfBirth: '', height: '', bmi: '', goal: 'BULK', gymTime: '',
@@ -254,6 +276,14 @@ function SettingsContent() {
               <input type="time" value={form.gymTime} onChange={(e) => setForm({ ...form, gymTime: e.target.value })} className="w-full pl-9 pr-4 py-3 bg-dark-900/50 border border-dark-700 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-primary-500/50" />
             </div>
           </div>
+        </div>
+
+        <div className="bg-dark-800/30 border border-dark-700/30 rounded-2xl p-6 space-y-4">
+          <h2 className="text-lg font-semibold text-white flex items-center gap-2"><Bell className="w-5 h-5 text-primary-400" /> Push Notifications</h2>
+          <p className="text-sm text-dark-400">Get notified of new messages, gym time reminders, and streak milestones even when the app is closed.</p>
+          <button type="button" onClick={togglePush} className={`w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${pushEnabled ? 'bg-green-600/20 text-green-400 border border-green-600/30' : 'bg-dark-900/50 text-dark-300 border border-dark-700 hover:text-white'}`}>
+            <Bell className="w-4 h-4" /> {pushEnabled ? 'Notifications Enabled' : 'Enable Notifications'}
+          </button>
         </div>
 
         {canInstall && (
